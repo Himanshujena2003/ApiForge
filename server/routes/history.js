@@ -14,7 +14,6 @@ router.get('/', (req, res) => {
 // Clear all history and notify all clients
 router.delete('/', (req, res) => {
   store.clearHistory();
-  req.app.locals.io.emit('history:cleared');
   res.status(204).send();
 });
 
