@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>APIForge</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
@@ -15,8 +15,8 @@
   <aside class="sidebar">
     <div class="sidebar-top">
       <div class="logo">
-        <span class="logo-icon">⬡</span>
-        <span class="logo-text">APIForge</span>
+        <div class="logo-icon">⬡</div>
+        <span class="logo-text">APIFORGE</span>
       </div>
       <div class="env-row">
         <span class="env-label">env</span>
@@ -31,14 +31,7 @@
     <div class="collections" id="collectionList"></div>
 
     <div class="sidebar-footer">
-      <div class="collab-row">
-        <div class="live-indicator">
-          <span class="live-dot"></span>
-          <span id="userCount">1 online</span>
-        </div>
-        <div class="avatars" id="avatarRow"></div>
-      </div>
-      <button class="history-btn" onclick="UI.toggleHistory()">⏱ history</button>
+      <button class="history-btn" onclick="UI.toggleHistory()">⏱ &nbsp;request history</button>
     </div>
   </aside>
 
@@ -54,9 +47,9 @@
         <option>PATCH</option>
         <option>DELETE</option>
       </select>
-      <input id="urlInput" class="url-input" placeholder="https://api.example.com/endpoint  or  {{BASE_URL}}/users" />
+      <input id="urlInput" class="url-input" placeholder="https://api.example.com/endpoint  ·  {{BASE_URL}}/users" />
       <button id="sendBtn" class="send-btn" onclick="App.send()">
-        <span id="sendLabel">Send</span>
+        <span id="sendLabel">SEND</span>
         <span id="sendSpinner" class="spinner hidden"></span>
       </button>
     </div>
@@ -64,36 +57,36 @@
     <!-- Tab bar -->
     <div class="tab-bar">
       <div class="tabs">
-        <button class="tab active" data-tab="body"    onclick="UI.switchTab(this)">Body</button>
-        <button class="tab"        data-tab="headers" onclick="UI.switchTab(this)">Headers</button>
-        <button class="tab"        data-tab="auth"    onclick="UI.switchTab(this)">Auth</button>
+        <button class="tab active" data-tab="body"    onclick="UI.switchTab(this)">body</button>
+        <button class="tab"        data-tab="headers" onclick="UI.switchTab(this)">headers</button>
+        <button class="tab"        data-tab="auth"    onclick="UI.switchTab(this)">auth</button>
       </div>
       <div class="save-row">
-        <input id="reqNameInput" class="req-name-input" placeholder="Request name..." />
-        <button class="save-btn" onclick="App.saveRequest()">Save</button>
+        <input id="reqNameInput" class="req-name-input" placeholder="name this request..." />
+        <button class="save-btn" onclick="App.saveRequest()">save</button>
       </div>
     </div>
 
     <!-- Panels -->
     <div class="panels">
       <div id="bodyPanel" class="panel active">
-        <textarea id="bodyEditor" class="code-editor" placeholder='{\n  "key": "value"\n}'></textarea>
+        <textarea id="bodyEditor" class="code-editor" placeholder='// request body (JSON)&#10;{&#10;  "key": "value"&#10;}'></textarea>
       </div>
 
       <div id="headersPanel" class="panel">
         <div class="kv-list" id="headersList"></div>
-        <button class="add-kv-btn" onclick="UI.addHeaderRow()">+ Add header</button>
+        <button class="add-kv-btn" onclick="UI.addHeaderRow()">+ add header</button>
       </div>
 
       <div id="authPanel" class="panel">
         <div class="auth-form">
           <div class="field-row">
-            <label>Type</label>
+            <label>Auth type</label>
             <select id="authType" onchange="UI.renderAuthFields()">
-              <option value="none">None</option>
-              <option value="bearer">Bearer Token</option>
-              <option value="basic">Basic Auth</option>
-              <option value="apikey">API Key</option>
+              <option value="none">none</option>
+              <option value="bearer">bearer token</option>
+              <option value="basic">basic auth</option>
+              <option value="apikey">api key</option>
             </select>
           </div>
           <div id="authFields"></div>
@@ -105,14 +98,14 @@
     <div class="response-section">
       <div class="response-header">
         <div class="resp-meta">
-          <span class="resp-label">Response</span>
+          <span class="resp-label">response</span>
           <span id="statusBadge"   class="status-badge hidden"></span>
           <span id="durationBadge" class="meta-badge hidden"></span>
           <span id="sizeBadge"     class="meta-badge hidden"></span>
         </div>
-        <button class="copy-btn" onclick="App.copyResponse()">Copy</button>
+        <button class="copy-btn" onclick="App.copyResponse()">copy</button>
       </div>
-      <pre id="responseBody" class="response-body"><span class="placeholder">Hit Send to see a response  ·  Ctrl+Enter</span></pre>
+      <pre id="responseBody" class="response-body"><span class="placeholder">// hit send to see a response  ·  ctrl+enter</span></pre>
     </div>
 
   </main>
@@ -120,9 +113,9 @@
   <!-- ── History Drawer ──────────────────────────────────────────── -->
   <div class="drawer hidden" id="historyDrawer">
     <div class="drawer-header">
-      <span>Request history</span>
-      <div style="display:flex;gap:8px;align-items:center">
-        <button class="drawer-action" onclick="App.clearHistory()">Clear</button>
+      <span>history</span>
+      <div style="display:flex;gap:6px;align-items:center">
+        <button class="drawer-action" onclick="App.clearHistory()">clear</button>
         <button class="drawer-action" onclick="UI.toggleHistory()">✕</button>
       </div>
     </div>
@@ -131,10 +124,8 @@
 
 </div>
 
-<script src="/socket.io/socket.io.js"></script>
 <script src="/js/highlight.js"></script>
 <script src="/js/ui.js"></script>
-<script src="/js/socket.js"></script>
 <script src="/js/api.js"></script>
 <script src="/js/app.js"></script>
 </body>

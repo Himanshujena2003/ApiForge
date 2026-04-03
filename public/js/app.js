@@ -1,7 +1,6 @@
 'use strict';
 
-// App — top-level orchestrator
-// Owns state, calls API, calls UI. Never touches the DOM directly.
+// App — orchestrator. Owns state, calls API, calls UI.
 
 const App = (() => {
 
@@ -15,14 +14,14 @@ const App = (() => {
   async function boot() {
     await loadCollections();
     await loadHistory();
-    UI.addHeaderRow();       // Start with one empty header row
-    UI.renderAuthFields();   // Render default auth panel
+    UI.addHeaderRow();
+    UI.renderAuthFields();
 
     document.getElementById('envSelect').addEventListener('change', (e) => {
       state.environment = e.target.value;
     });
 
-    // Ctrl/Cmd + Enter → send request
+    // Ctrl/Cmd + Enter → send
     document.addEventListener('keydown', (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') send();
     });
@@ -46,9 +45,6 @@ const App = (() => {
 
     document.querySelectorAll('.req-item').forEach(i => i.classList.remove('active'));
     el.classList.add('active');
-
-    // Broadcast presence — "I'm viewing this request"
-    SocketClient.emitViewing(reqId);
   }
 
   async function saveRequest() {
@@ -64,7 +60,7 @@ const App = (() => {
     if (!colId) return;
 
     await API.saveRequestToCollection(colId, { name, method, url, body });
-    // Collection update is broadcast via Socket.io → loadCollections() fires automatically
+    await loadCollections();
   }
 
   // ── Send ───────────────────────────────────────────────────────────────────
@@ -90,6 +86,8 @@ const App = (() => {
       UI.showError(err.message);
     } finally {
       UI.setSending(false);
+      // Refresh history after every request
+      await loadHistory();
     }
   }
 
@@ -99,27 +97,18 @@ const App = (() => {
     UI.renderHistory(state.history);
   }
 
-  function onNewHistoryEntry(entry) {
-    state.history.unshift(entry);
-    UI.renderHistory(state.history);
-  }
-
-  function onHistoryCleared() {
-    state.history = [];
-    UI.renderHistory(state.history);
-  }
-
   function replayHistory(id) {
     const entry = state.history.find(h => h.id === id);
     if (!entry) return;
-    document.getElementById('urlInput').value    = entry.url;
+    document.getElementById('urlInput').value     = entry.url;
     document.getElementById('methodSelect').value = entry.method;
     UI.toggleHistory();
   }
 
   async function clearHistory() {
     await API.clearHistory();
-    // Server broadcasts history:cleared → onHistoryCleared fires
+    state.history = [];
+    UI.renderHistory(state.history);
   }
 
   function copyResponse() {
@@ -131,7 +120,6 @@ const App = (() => {
 
   return {
     send, loadCollections, loadRequest, saveRequest,
-    loadHistory, onNewHistoryEntry, onHistoryCleared,
-    replayHistory, clearHistory, copyResponse
+    loadHistory, replayHistory, clearHistory, copyResponse
   };
 })();

@@ -1,7 +1,6 @@
 'use strict';
 
-// UI module — pure DOM manipulation
-// No fetch calls, no business logic. Just rendering.
+// UI module — pure DOM manipulation, no fetch calls, no business logic.
 
 const UI = (() => {
 
@@ -72,14 +71,6 @@ const UI = (() => {
     });
   }
 
-  // ── Collab ─────────────────────────────────────────────────────────────────
-  function renderUsers(users) {
-    document.getElementById('userCount').textContent = `${users.length} online`;
-    document.getElementById('avatarRow').innerHTML = users.slice(0, 5).map(u =>
-      `<div class="avatar" style="background:${u.color}22;color:${u.color}" title="${u.name}">${u.name.slice(-3)}</div>`
-    ).join('');
-  }
-
   // ── Tabs ───────────────────────────────────────────────────────────────────
   function switchTab(btn) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -92,7 +83,6 @@ const UI = (() => {
   function addHeaderRow(key = '', val = '') {
     const list = document.getElementById('headersList');
 
-    // Add column headers on first row
     if (!list.querySelector('.kv-header')) {
       const h = document.createElement('div');
       h.className = 'kv-header';
@@ -187,7 +177,7 @@ const UI = (() => {
   }
 
   return {
-    renderCollections, renderHistory, renderUsers,
+    renderCollections, renderHistory,
     showResponse, showError, clearResponse,
     switchTab, addHeaderRow, getHeaders,
     renderAuthFields, getAuthHeader,

@@ -39,7 +39,7 @@ const _data = {
 const HISTORY_LIMIT = 50;
 
 const store = {
-  // ── History ────────────────────────────────────────────────────────────────
+  // History
   getHistory()            { return [..._data.history]; },
   addHistory(entry)       {
     _data.history.unshift(entry);
@@ -47,7 +47,7 @@ const store = {
   },
   clearHistory()          { _data.history = []; },
 
-  // ── Collections ────────────────────────────────────────────────────────────
+  // Collections 
   getCollections()        { return _data.collections; },
   getCollection(id)       { return _data.collections.find(c => c.id === id) || null; },
   addRequestToCollection(colId, request) {
@@ -64,7 +64,7 @@ const store = {
     return col.requests.length < before;
   },
 
-  // ── Environments ───────────────────────────────────────────────────────────
+  // Environments
   getEnvironments()       { return _data.environments; },
   getEnvironment(name)    { return _data.environments[name] || {}; }
 };

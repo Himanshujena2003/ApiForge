@@ -12,7 +12,6 @@ router.get('/', (req, res) => {
 });
 
 // POST /api/collections/:collectionId/requests
-// Save a new request into an existing collection
 router.post('/:collectionId/requests', (req, res, next) => {
   const { name, method, url, body } = req.body;
 
@@ -25,13 +24,6 @@ router.post('/:collectionId/requests', (req, res, next) => {
 
   if (!saved) return next({ status: 404, message: 'Collection not found' });
 
-  // Broadcast to all clients so sidebars update in real-time
-  req.app.locals.io.emit('collection:updated', {
-    collectionId: req.params.collectionId,
-    request:      newRequest,
-    action:       'add'
-  });
-
   res.status(201).json(newRequest);
 });
 
@@ -43,12 +35,6 @@ router.delete('/:collectionId/requests/:requestId', (req, res, next) => {
   );
 
   if (!deleted) return next({ status: 404, message: 'Request or collection not found' });
-
-  req.app.locals.io.emit('collection:updated', {
-    collectionId: req.params.collectionId,
-    requestId:    req.params.requestId,
-    action:       'delete'
-  });
 
   res.status(204).send();
 });
