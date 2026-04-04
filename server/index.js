@@ -16,22 +16,22 @@ const environmentsRoute = require('./routes/environments');
 
 const app = express();
 
-// ── Middleware ─────────────────────────────────────────────────────────────────
+// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
-// ── Routes ─────────────────────────────────────────────────────────────────────
+// Routes 
 app.use('/api', rateLimiter);
 app.use('/api/proxy',        proxyRoute);
 app.use('/api/collections',  collectionsRoute);
 app.use('/api/history',      historyRoute);
 app.use('/api/environments', environmentsRoute);
 
-// ── Error Handler ──────────────────────────────────────────────────────────────
+// Error Handler 
 app.use(errorHandler);
 
-// ── Start ──────────────────────────────────────────────────────────────────────
+// Start
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`\n🚀  APIForge → http://localhost:${PORT}\n`);
